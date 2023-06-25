@@ -3,8 +3,15 @@ uuid = "412f951a-2b9f-4091-9b2c-bdd28f6e5ef0"
 authors = ["idjotherwise <ifan.johnston@gmail.com> and contributors"]
 version = "1.0.0-DEV"
 
+[deps]
+DotEnv = "4dc1fcf4-5e3b-5448-94ab-0c38ec0385c1"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+LoopVectorization = "bdcacae8-1622-11e9-2a5c-532679323890"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+StringEncodings = "69024149-9ee7-55f6-a4c4-859efe599b68"
+
 [compat]
-julia = "1"
+julia = "1.9"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

@@ -3,7 +3,7 @@ module Embed
 using ..Utils
 using LinearAlgebra
 
-export uk_embtable, ru_embtable, embeddings_index, word_indicies, read_embedding, get_embedding, get_similar_words, EmbeddingTable, Word2Vec
+export uk_embtable, ru_embtable, embeddings_index, word_indicies, read_embedding, get_embedding, get_similar_words, EmbeddingTable, Word2Vec, word_pairs
 
 """
 Struct to hold the embedding values and the vocab
@@ -76,10 +76,15 @@ function word_indicies(embtable::EmbeddingTable{Matrix{Float32},Vector{String}})
   Dict(word => ii for (ii, word) in enumerate(embtable.vocab))
 end
 
+const ru_lookup = word_indicies(ru_embtable)
+const uk_lookup = word_indicies(uk_embtable)
+
 "Get the vector associated with a word."
-function get_embedding(word::String, embtable::EmbeddingTable{Matrix{Float32},Vector{String}})
-  ind = word_indicies(embtable)[word]
-  embtable.embeddings[:, ind]
+function get_embedding(word::String, lang::String)
+  lookup_table = lang == "uk" ? uk_lookup : ru_lookup
+  e_table = lang == "uk" ? uk_embtable : ru_embtable
+  ind = lookup_table[word]
+  e_table.embeddings[:, ind]
 end
 
 "List `topn` most similar words."
@@ -92,6 +97,25 @@ function get_similar_words(word::String, embtable::EmbeddingTable{Matrix{Float32
   similarities = view(sims, idxs)
   similar_words = view(embtable.vocab, idxs)
   collect(zip(similar_words, similarities))
+end
+
+function word_pairs(filename::String)
+  uk_ru_pairs = Vector{Tuple{String,String}}()
+  uk_vectors = Vector{Vector{Float32}}()
+  ru_vectors = Vector{Vector{Float32}}()
+  filename = isfile(filename) ? filename : "data/test_shared_words.txt"
+  open(filename, "r") do ps
+    for l in eachline(ps)
+      uk, ru = String.(split(l, "\t"))
+      if uk ∉ uk_embtable.vocab || ru ∉ ru_embtable.vocab
+        continue
+      end
+      push!(uk_ru_pairs, (uk, ru))
+      push!(uk_vectors, get_embedding(uk, "uk"))
+      push!(ru_vectors, get_embedding(ru, "ru"))
+    end
+  end
+  uk_ru_pairs, uk_vectors, ru_vectors
 end
 
 end

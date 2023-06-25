@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
         with:
-          version: '1'
+          version: '1.9'
       - name: Configure doc environment
         run: |
           julia --project=docs/ -e '
@@ -59,4 +59,6 @@ jobs:
             using Documenter: DocMeta, doctest
             using Wordlings
             DocMeta.setdocmeta!(Wordlings, :DocTestSetup, :(using Wordlings); recursive=true)
-            doctest(Wordlings)'
+            doctest(Wordlings)
+            include("make.jl")
+            '

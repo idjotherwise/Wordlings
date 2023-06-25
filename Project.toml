@@ -1,0 +1,13 @@
+name = "Wordlings"
+uuid = "412f951a-2b9f-4091-9b2c-bdd28f6e5ef0"
+authors = ["idjotherwise <ifan.johnston@gmail.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

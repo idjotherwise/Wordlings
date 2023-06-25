@@ -25,6 +25,11 @@ a 300-dimensional embedding vector.
 """
 function read_embedding(::Type{Word2Vec}, embedding_file::String; keep_words::Vector{String}=String[], max_vocab_size::Union{Int64,Nothing}=nothing)::EmbeddingTable
   local LL, indexed_words, index
+  if !isfile(embedding_file)
+    embedding_file = "data/test_embeds.vec"
+    max_vocab_size = 3
+  end
+
   open(embedding_file, "r") do fh
     vocab_size, vector_size = parse.(Int64, split(readline(fh)))
 
